@@ -85,27 +85,31 @@ def decode(input, dict):
                 found = True
     return ans
 
-mat = scipy.io.loadmat('freq.mat')
-freqs = mat["freq"]
-freqsList = []
+def main() :
+    mat = scipy.io.loadmat('freq.mat')
+    freqs = mat["freq"]
+    freqsList = []
 
-for i in range(97, 123, 1) :
-    j = i - 97
-    node = HuffmanNode(None, None, chr(i), freqs[j][0])
-    freqsList.append((freqs[j][0], node))
+    for i in range(97, 123, 1) :
+        j = i - 97
+        node = HuffmanNode(None, None, chr(i), freqs[j][0])
+        freqsList.append((freqs[j][0], node))
 
-tree = create_tree(freqsList)
-root = tree[0][1]
-root.setCode("")
-createCodes(root)
-dict_encode = {}
-dict_decode = {}
-createDicts(root, dict_encode, dict_decode)
-input = raw_input("Enter input : ")
-code = (encode(input, dict_encode))
-print('code= ', code)
-raw = decode(code, dict_decode)
-print('decode= ', raw)
+    tree = create_tree(freqsList)
+    root = tree[0][1]
+    root.setCode("")
+    createCodes(root)
+    dict_encode = {}
+    dict_decode = {}
+    createDicts(root, dict_encode, dict_decode)
+    input = raw_input("Enter input : ")
+    code = (encode(input, dict_encode))
+    print('code= ', code)
+    raw = decode(code, dict_decode)
+    print('decode= ', raw)
+
+if __name__== "__main__":
+      main()
 
 
 
