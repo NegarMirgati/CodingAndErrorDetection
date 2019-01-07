@@ -38,10 +38,49 @@ def encode(input):
         i = i + 1
     return ans
 
+def decode(input):
+    currentPM = [None] * 4
+    nextPM = [None] * 4
+    currentPM[0] = 0
+    currentPM[1] = float("inf")
+    currentPM[2] = float("inf")
+    currentPM[3] = float("inf")
+
+    i = 0
+    while(i < len(input)) :
+        str = input[i : i + 2]
+        if(str == '00') :
+            nextPM[0] = min(currentPM[0], currentPM[1] + 1)
+            nextPM[1] = min(currentPM[2] + 2, currentPM[3] + 1)
+            nextPM[2] = min(currentPM[0] + 2, currentPM[1] + 1)
+            nextPM[3] = min(currentPM[2], currentPM[3] + 1)
+        elif(str == '01') :
+            nextPM[0] = min(currentPM[0] + 1, currentPM[1] + 2)
+            nextPM[1] = min(currentPM[2] + 1, currentPM[3])
+            nextPM[2] = min(currentPM[0] + 1, currentPM[1])
+            nextPM[3] = min(currentPM[2] + 1, currentPM[3] + 2)
+        elif(str == '10') :
+            nextPM[0] =  min(currentPM[0] + 1, currentPM[1])
+            nextPM[1] =  min(currentPM[2] + 1, currentPM[3] + 2)
+            nextPM[2] =  min(currentPM[0] + 1, currentPM[1] + 2)
+            nextPM[3] =  min(currentPM[2] + 1, currentPM[3])
+        else:
+            nextPM[0] = min(currentPM[0] + 2, currentPM[1] + 1)
+            nextPM[1] = min(currentPM[2], currentPM[3] + 1)
+            nextPM[2] = min(currentPM[0], currentPM[1] + 1)
+            nextPM[3] = min(currentPM[2] + 2, currentPM[3] + 1)
+        i = i + 2
+        currentPM = nextPM
+    
+    print(currentPM)
+
+
 def main() :
     input = raw_input("Enter input : ")
     code = encode(input)
     print('code= ', code)
+    decoded = decode(code)
+    print('decode = ', decoded)
 
 if __name__== "__main__":
       main()
