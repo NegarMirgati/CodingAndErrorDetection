@@ -28,6 +28,25 @@ class HuffmanNode(object):
         self.code = code
 
 class HuffmanCoding :    
+    def __init__(self):
+        mat = scipy.io.loadmat('freq.mat')
+        freqs = mat["freq"]
+        self.freqsList = []
+        self.dict_encode = {}
+        self.dict_decode = {}
+
+        for i in range(97, 123, 1) :
+            j = i - 97
+            node = HuffmanNode(None, None, chr(i), freqs[j][0])
+            self.freqsList.append((freqs[j][0], node))
+        
+        tree = self.create_tree(self.freqsList)
+        root = tree[0][1]
+        root.setCode("")
+        self.createCodes(root)
+        self.createDicts(root)
+        
+
     def create_tree(self, frequencies): 
         while len(frequencies) > 1:       
             indexl, valuel = min(enumerate(frequencies), key=operator.itemgetter(1))
@@ -51,24 +70,24 @@ class HuffmanCoding :
             children[1][1].setCode(code + "1")
             self.createCodes(children[1][1])
 
-    def createDicts(self, root, dict_encode, dict_decode) :
+    def createDicts(self, root) :
         if(len(root.getStr()) == 1): 
-            dict_encode[root.getStr()] = root.getCode()
-            dict_decode[root.getCode()] = root.getStr()
+            self.dict_encode[root.getStr()] = root.getCode()
+            self.dict_decode[root.getCode()] = root.getStr()
 
         children = root.getChildren()
         if(children[0] != None):
-            self.createDicts(children[0][1], dict_encode, dict_decode)
+            self.createDicts(children[0][1])
         if(children[1] != None):
-            self.createDicts(children[1][1], dict_encode, dict_decode)
+            self.createDicts(children[1][1])
 
-    def encode(self, input, dict):
+    def encode(self, input):
         output = ''
         for i in range(0, len(input)) :
-            output = output + dict[input[i]]
+            output = output + self.dict_encode[input[i]]
         return output
         
-    def decode(self, input, dict):
+    def decode(self, input):
         found = False
         code = ''
         ans = ''
@@ -79,33 +98,18 @@ class HuffmanCoding :
             while(found == False):
                 code = code + input[i]
                 i = i + 1
-                if(dict.has_key(code)):
-                    ans = ans + dict[code]
+                if(self.dict_decode.has_key(code)):
+                    ans = ans + self.dict_decode[code]
                     found = True
         return ans
 
+
 def main() :
-    mat = scipy.io.loadmat('freq.mat')
-    freqs = mat["freq"]
-    freqsList = []
-
-    for i in range(97, 123, 1) :
-        j = i - 97
-        node = HuffmanNode(None, None, chr(i), freqs[j][0])
-        freqsList.append((freqs[j][0], node))
-
     h = HuffmanCoding() 
-    tree = h.create_tree(freqsList)
-    root = tree[0][1]
-    root.setCode("")
-    h.createCodes(root)
-    dict_encode = {}
-    dict_decode = {}
-    h.createDicts(root, dict_encode, dict_decode)
     input = raw_input("Enter input : ")
-    code = (h.encode(input, dict_encode))
+    code = h.encode(input)
     print('code= ', code)
-    raw = h.decode(code, dict_decode)
+    raw = h.decode(code)
     print('decode= ', raw)
 
 if __name__== "__main__":
