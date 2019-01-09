@@ -16,8 +16,8 @@ def noise(input):
 def main() :
     h = HuffmanCoding()
     c = Convolutional()
-    input = raw_input("Enter input : ")
-    input = input.replace(" ","")
+    input = "negarmirgati"
+    print('input', input)
     hEncoded = h.encode(input)
     print('huffman coded', hEncoded)
     cEncoded = c.encode(hEncoded)
@@ -28,7 +28,6 @@ def main() :
     print('convolutional decode', cDecoded)
     hDecoded = h.decode(cDecoded)
     print('huffman decode', hDecoded)
-    print(hDecoded)
 
 if __name__== "__main__":
       main()

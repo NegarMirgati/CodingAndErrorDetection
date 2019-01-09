@@ -96,6 +96,8 @@ class HuffmanCoding :
             code = ''
             found = False
             while(found == False):
+                if(i >= len(input)) :
+                    return "ERROR : Character out of English Alphabet"
                 code = code + input[i]
                 i = i + 1
                 if(self.dict_decode.has_key(code)):
